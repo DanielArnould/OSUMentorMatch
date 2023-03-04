@@ -26,9 +26,16 @@ user = api.user(user = keys_dict['user'], mode=GameMode.OSU)
 utils = OSUUtils.Utils(api)
     
 top_beatmapsets = utils.get_top_beatmapsets(user, limit=10)
+top_beatmaps = utils.get_top_beatmaps(user, limit=10)
 
-for i in range(0, 10):
-    utils.list_top_players(starting_rank=1, ending_rank=10, beatmap=top_beatmapsets[i].beatmaps[0])
+print(utils.get_most_common_genre_id(top_beatmapsets))
+print(utils.get_most_common_language_id(top_beatmapsets))
+print(utils.get_average_difficulty(top_beatmaps))
+print(utils.get_average_length(top_beatmaps))
+print(utils.get_average_bpm(top_beatmaps)) # NOT ALL MAPS HAVE BPM SPECIFIED
+print(utils.get_average_circle_count(top_beatmaps))
+print(utils.get_average_slider_count(top_beatmaps))
+print(utils.get_average_spinner_count(top_beatmaps))
 
 
 
