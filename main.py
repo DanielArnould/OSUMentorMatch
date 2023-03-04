@@ -29,11 +29,17 @@ user = api.user(user = userId, mode=GameMode.OSU)
 utils = OSUUtils.Utils(api)
 
 top_ten_beatmapsets = utils.get_top_ten_beatmapsets(user)
+
+
 first_beatmap = top_ten_beatmapsets[0].beatmaps[0]
 
 # Each call of this function takes ~ 6-7 Seconds
 utils.list_top_players(1, 10, first_beatmap)
-utils.store_beatmap_details(first_beatmap)
+
+
+top_ten_beatmap = utils.get_top_ten_beatmaps(user)
+
+#utils.store_beatmap_details(top_ten_beatmapsets)
 
 
 
