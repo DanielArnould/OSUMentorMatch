@@ -1,7 +1,8 @@
-from ossapi import Ossapi, GameMode, UserLookupKey, RankingType, UserBeatmapType, Scope
+from ossapi import *
 
 class Utils():
     def __init__(self, api):
+        self.api: Ossapi
         self.api = api
         self.beatmap_details = {
             "genre": [],
@@ -13,17 +14,21 @@ class Utils():
     def list_top_players(self, starting_rank, ending_rank, beatmap):
         scores = self.api.beatmap_scores(beatmap.id).scores
         for i in range(starting_rank - 1, ending_rank):
-            score = scores[i]
-            print(score.user().username)
+            try:
+                score = scores[i]
+                print(score.user().username)
+            except IndexError:
+                print("Empty List. Is this map graveyarded?")
+                break
 
 
-    def get_top_ten_beatmapsets(self, user):
+    def get_top_beatmapsets(self, user, limit):
         # API stupidly returns a list of BeatmapPlaycount classes, rather than beatmap sets for most played beatmaps
         
         # Maybe cache this so it doesn't have to be called again, or put it into a function?????
-        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=10)
+        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=limit)
         
-        top_ten_beatmapsets = []
+        top_beatmapsets = []
 
         for beatmap_play_count in beatmap_play_counts:
             # create a beatmapset object for all beatmaps in users top 10 played.
@@ -32,19 +37,19 @@ class Utils():
             beatmapset = beatmap_play_count.beatmapset.expand()
             # self.store_beatmap_details(str(beatmapset).split(",")
 
-            top_ten_beatmapsets.append(beatmapset)
+            top_beatmapsets.append(beatmapset)
 
-        return top_ten_beatmapsets
+        return top_beatmapsets
     
-    def get_top_ten_beatmaps(self, user):
-        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=10)
-        top_ten_beatmaps = []
+    def get_top_beatmaps(self, user, limit):
+        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=limit)
+        top_beatmaps = []
 
         for beatmap_play_count in beatmap_play_counts:
             beatmap = beatmap_play_count.beatmap()
-            top_ten_beatmaps.append(beatmap)
+            top_beatmaps.append(beatmap)
 
-        return top_ten_beatmaps
+        return top_beatmaps
 
 """    def store_beatmap_details(self, beatMap):
         # self.beatmap_details["difficulty"].append(beatMap[28])
