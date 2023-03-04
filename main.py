@@ -25,6 +25,7 @@ user = api.user(user = keys_dict['user'], mode=GameMode.OSU)
 
 utils = OSUUtils.Utils(api)
     
+
 top_beatmapsets = utils.get_top_beatmapsets(user, limit=10)
 top_beatmaps = utils.get_top_beatmaps(user, limit=10)
 
