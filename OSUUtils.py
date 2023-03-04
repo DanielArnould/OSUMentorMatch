@@ -3,6 +3,12 @@ from ossapi import Ossapi, GameMode, UserLookupKey, RankingType, UserBeatmapType
 class Utils():
     def __init__(self, api):
         self.api = api
+        self.beatmap_details = {
+            "genre": [],
+            "difficulty": [],
+            "length": [],
+            "language": []
+        }
 
     def list_top_players(self, starting_rank, ending_rank, beatmap):
         scores = self.api.beatmap_scores(beatmap.id).scores
@@ -22,5 +28,36 @@ class Utils():
             # The expand call takes a lot of time
             beatmapset = beatmap_play_count.beatmapset.expand()
             top_ten_beatmapsets.append(beatmapset)
+            self.store_beatmap_details(str(beatmapset).split(","))
+
 
         return top_ten_beatmapsets
+
+    def store_beatmap_details(self, beatMap):
+        # self.beatmap_details["difficulty"].append(beatMap[28])
+        # self.beatmap_details["length"].append(beatMap[32])
+        # print(beatMap.index(" language={'id': 3", " 'name': 'Japanese'}"))
+        counter = 0
+        languageBool = False
+        diffBool = False
+        lengthBool = False
+        genreBool = False
+        for i in beatMap:
+            if i.__contains__("language=") and not languageBool:
+                self.beatmap_details["language"].append(beatMap[counter][-1])
+                languageBool = True
+            if i.__contains__("difficulty") and not diffBool:
+                self.beatmap_details["difficulty"].append(beatMap[counter][-1])
+                diffBool = True
+            if i.__contains__("total_length") and not lengthBool:
+                self.beatmap_details["length"].append(beatMap[counter][14:-1])
+                lengthBool = True
+            if i.__contains__("genre") and not genreBool:
+                self.beatmap_details["genre"].append(beatMap[counter][-1])
+                genreBool = True
+            counter += 1
+
+        print(self.beatmap_details)
+        # beatMap.index("language =")
+        # print(self.beatmap_details["length"])
+        # print(self.beatmap_details["difficulty"])

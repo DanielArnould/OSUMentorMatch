@@ -1,3 +1,4 @@
+import asyncio
 from ossapi import Ossapi, GameMode, UserLookupKey, RankingType, UserBeatmapType, Scope
 import configparser
 import OSUUtils
@@ -18,7 +19,6 @@ keys_dict = dict(config.items('CONFIG'))
 # Create a new client at https://osu.ppy.sh/home/account/edit#oauth
 client_id = keys_dict['client_id']
 client_secret = keys_dict['client_secret']
-
 api = Ossapi(client_id, client_secret)
 api.scopes = [Scope.PUBLIC, Scope.IDENTIFY]
 user = api.user(user=keys_dict['user'], mode=GameMode.OSU, key=UserLookupKey.USERNAME)
@@ -29,7 +29,7 @@ first_beatmap = top_ten_beatmapsets[0].beatmaps[0]
 
 # Each call of this function takes ~ 6-7 Seconds
 utils.list_top_players(1, 10, first_beatmap)
-
+utils.store_beatmap_details(first_beatmap)
 
 
 
