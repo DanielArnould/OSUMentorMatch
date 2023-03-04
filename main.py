@@ -16,7 +16,7 @@ Beatmaps in set are ordered from hardest difficulty to easiest difficulty
 config = configparser.RawConfigParser()
 config.read('config.cfg')
 keys_dict = dict(config.items('CONFIG'))
-
+ # gdsgdsfdsfsd
 # Client ID is needed for operation, client-secret allows for user control
 # Create a new client at https://osu.ppy.sh/home/account/edit#oauth
 client_id = keys_dict['client_id']
@@ -31,7 +31,9 @@ first_beatmap = top_ten_beatmapsets[0].beatmaps[0]
 
 # Each call of this function takes ~ 6-7 Seconds
 utils.list_top_players(1, 10, first_beatmap)
-utils.store_beatmap_details(first_beatmap)
+
+for beatmap in utils.get_top_ten_beatmaps(user):
+    print(beatmap.difficulty_rating)
 
 
 
