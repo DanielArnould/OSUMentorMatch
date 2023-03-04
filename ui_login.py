@@ -6,7 +6,7 @@ import tkinter.font as tkFont
 class App:
     def __init__(self, root):
         #setting title
-        root.title("undefined")
+        root.title("Osu Mentory")
         #setting window size
         width=500
         height=500
