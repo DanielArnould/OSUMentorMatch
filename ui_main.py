@@ -3,7 +3,7 @@ import os
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import *  
-
+import OAuthCheck   
 
 
 class App:
@@ -48,6 +48,9 @@ class App:
             
             
             def runProfile():
+                
+
+                OAuthCheck.check_OAuth()
                 f2.pack(fill="both", expand=True, padx=0, pady=0)
                 f1.pack_forget()
                 Profile()
