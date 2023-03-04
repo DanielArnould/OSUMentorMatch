@@ -1,5 +1,5 @@
-from ossapi import Ossapi, GameMode, UserLookupKey, RankingType, UserBeatmapType, Scope
-# import configparser
+from ossapi import *
+import configparser
 import OSUUtils
 
 """"IMPORTANT NOTES:
@@ -10,42 +10,32 @@ Graveyarded beatmaps or beatmapsets don't contain any scores, but the api still 
 Beatmaps in set are ordered from hardest difficulty to easiest difficulty
 """
 
-# config = configparser.RawConfigParser()
-# config.read('config.cfg')
-# keys_dict = dict(config.items('CONFIG'))
+config = configparser.RawConfigParser()
+config.read('config.cfg')
+keys_dict = dict(config.items('CONFIG'))
+
 
 # Client ID is needed for operation, client-secret allows for user control
 # Create a new client at https://osu.ppy.sh/home/account/edit#oauth
-# client_id = keys_dict['client_id']
-# client_secret = keys_dict['client_secret']
-
-client_id = 20800
-client_secret = "1CwngLGnXiBszeUcTuWyRpWzmWp3Itd7fErVEAhj"
-userId = 9545422
+client_id = keys_dict['client_id']
+client_secret = keys_dict['client_secret']
 
 api = Ossapi(client_id, client_secret)
-api.scopes = [Scope.PUBLIC, Scope.IDENTIFY]
-user = api.user(user = userId, mode=GameMode.OSU)
+user = api.user(user = keys_dict['user'], mode=GameMode.OSU)
+
 utils = OSUUtils.Utils(api)
 
 top_ten_beatmapsets = utils.get_top_ten_beatmapsets(user)
 
 
-
 first_beatmap = top_ten_beatmapsets[0].beatmaps[0]
 
-
-
 # Each call of this function takes ~ 6-7 Seconds
-top_ten_players = utils.store_top_players(1, 10, first_beatmap)
+utils.list_top_players(1, 10, first_beatmap)
 
 
 top_ten_beatmap = utils.get_top_ten_beatmaps(user)
-# utils.get_average_difficulty(top_ten_beatmap) << returns and the average difficulty
 
-utils.get_common_beatmap_details(top_ten_beatmap)
-
-#utils.store_beatmap_details(top_ten_beatmapsets)
 
 
 
