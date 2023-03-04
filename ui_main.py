@@ -58,23 +58,23 @@ class App:
             def Login():
                     
                     ft = tkFont.Font(family='TkDefaultFont',size=10)
-                    GLabel_502=tk.Label(f1)
-                    GLabel_502["anchor"] = "center"
-                    GLabel_502["font"] = ft
-                    GLabel_502["fg"] = "#333333"
-                    GLabel_502["justify"] = "center"
-                    GLabel_502["text"] = "Login"
-                    GLabel_502.place(x=220,y=30,width=70,height=25)
+                    lbl_Login=tk.Label(f1)
+                    lbl_Login["anchor"] = "center"
+                    lbl_Login["font"] = ft
+                    lbl_Login["fg"] = "#333333"
+                    lbl_Login["justify"] = "center"
+                    lbl_Login["text"] = "Login"
+                    lbl_Login.place(x=220,y=30,width=70,height=25)
 
-                    GButton_304=tk.Button(f1)
-                    GButton_304["bg"] = "#e9e9ed"
+                    btn_Login=tk.Button(f1)
+                    btn_Login["bg"] = "#e9e9ed"
                     
-                    GButton_304["font"] = ft
-                    GButton_304["fg"] = "#000000"
-                    GButton_304["justify"] = "center"
-                    GButton_304["text"] = "Login With Osu"
-                    GButton_304.place(x=80,y=90,width=250,height=50)
-                    GButton_304["command"] = runProfile
+                    btn_Login["font"] = ft
+                    btn_Login["fg"] = "#000000"
+                    btn_Login["justify"] = "center"
+                    btn_Login["text"] = "Login With Osu"
+                    btn_Login.place(x=80,y=90,width=250,height=50)
+                    btn_Login["command"] = runProfile
                         
                 
 
@@ -83,90 +83,97 @@ class App:
             def Profile():
                 
 
-                    GMessage_338=tk.Message(f2)
+                    lbl_playerStats=tk.Message(f2)
                     ft = tkFont.Font(family='TkDefaultFont',size=10)
-                    GMessage_338["font"] = ft
-                    GMessage_338["fg"] = "#333333"
-                    GMessage_338["justify"] = "center"
-                    GMessage_338["text"] = "Player Information"
-                    GMessage_338.place(x=20,y=30,width=307,height=341)
+                    lbl_playerStats["font"] = ft
+                    lbl_playerStats["fg"] = "#333333"
+                    lbl_playerStats["justify"] = "center"
+                    lbl_playerStats["text"] = "Player Information"
+                    lbl_playerStats.place(x=20,y=30,width=307,height=341)
 
-                    GButton_472=tk.Button(f2)
-                    GButton_472["bg"] = "#e9e9ed"
+                    btn_logout=tk.Button(f2)
+                    btn_logout["bg"] = "#e9e9ed"
                     ft = tkFont.Font(family='TkDefaultFont',size=10)
-                    GButton_472["font"] = ft
-                    GButton_472["fg"] = "#000000"
-                    GButton_472["justify"] = "center"
-                    GButton_472["text"] = "Logout"
-                    GButton_472.place(x=270,y=60,width=70,height=25)
-                    GButton_472["command"] = runLogin
+                    btn_logout["font"] = ft
+                    btn_logout["fg"] = "#000000"
+                    btn_logout["justify"] = "center"
+                    btn_logout["text"] = "Logout"
+                    btn_logout.place(x=270,y=60,width=70,height=25)
+                    btn_logout["command"] = runLogin
 
-                    GMessage_659=tk.Message(f2)
+                    lbl_userData=tk.Message(f2)
                     ft = tkFont.Font(family='TkDefaultFont',size=10)
-                    GMessage_659["font"] = ft
-                    GMessage_659["fg"] = "#333333"
-                    GMessage_659["justify"] = "center"
-                    GMessage_659["text"] = "UserData"
-                    GMessage_659.place(x=240,y=0,width=128,height=66)
+                    lbl_userData["font"] = ft
+                    lbl_userData["fg"] = "#333333"
+                    lbl_userData["justify"] = "center"
+                    lbl_userData["text"] = "UserData"
+                    lbl_userData.place(x=240,y=0,width=128,height=66)
 
-                    GButton_902=tk.Button(f2)
-                    GButton_902["bg"] = "#e9e9ed"
+                    btn_matcher=tk.Button(f2)
+                    btn_matcher["bg"] = "#e9e9ed"
                     ft = tkFont.Font(family='TkDefaultFont',size=10)
-                    GButton_902["font"] = ft
-                    GButton_902["fg"] = "#000000"
-                    GButton_902["justify"] = "center"
-                    GButton_902["text"] = "Mentor Matcher"
-                    GButton_902.place(x=120,y=370,width=120,height=32)
-                    GButton_902["command"] = runMatcher
+                    btn_matcher["font"] = ft
+                    btn_matcher["fg"] = "#000000"
+                    btn_matcher["justify"] = "center"
+                    btn_matcher["text"] = "Mentor Matcher"
+                    btn_matcher.place(x=120,y=370,width=120,height=32)
+                    btn_matcher["command"] = runMatcher
 
                     
 
             def Matcher():
-                GMessage_338=tk.Message(f3)
+                lbl_playerStats=tk.Message(f3)
                 ft = tkFont.Font(family='TkDefaultFont',size=10)
-                GMessage_338["font"] = ft
-                GMessage_338["fg"] = "#333333"
-                GMessage_338["justify"] = "center"
-                GMessage_338["text"] = "Player Information"
-                GMessage_338.place(x=120,y=130,width=196,height=214)
+                lbl_playerStats["font"] = ft
+                lbl_playerStats["fg"] = "#333333"
+                lbl_playerStats["justify"] = "center"
+                lbl_playerStats["text"] = "Player Information"
+                lbl_playerStats.place(x=120,y=130,width=196,height=214)
 
-                GButton_20=tk.Button(f3)
-                GButton_20["bg"] = "#e9e9ed"
+                btn_playWith=tk.Button(f3)
+                btn_playWith["bg"] = "#e9e9ed"
                 ft = tkFont.Font(family='TkDefaultFont',size=10)
-                GButton_20["font"] = ft
-                GButton_20["fg"] = "#000000"
-                GButton_20["justify"] = "center"
-                GButton_20["text"] = "Play"
-                GButton_20.place(x=60,y=200,width=48,height=122)
-                GButton_20["command"] = runMatcher
+                btn_playWith["font"] = ft
+                btn_playWith["fg"] = "#000000"
+                btn_playWith["justify"] = "center"
+                btn_playWith["text"] = "Play"
+                btn_playWith.place(x=60,y=200,width=48,height=122)
+                btn_playWith["command"] = runMatcher  
 
-                GButton_769=tk.Button(f3)
-                GButton_769["bg"] = "#e9e9ed"
+                btn_SkipPlayer=tk.Button(f3)
+                btn_SkipPlayer["bg"] = "#e9e9ed"
                 ft = tkFont.Font(family='TkDefaultFont',size=10)
-                GButton_769["font"] = ft
-                GButton_769["fg"] = "#000000"
-                GButton_769["justify"] = "center"
-                GButton_769["text"] = "Skip"
-                GButton_769.place(x=320,y=200,width=51,height=129)
-                GButton_769["command"] = runMatcher
+                btn_SkipPlayer["font"] = ft
+                btn_SkipPlayer["fg"] = "#000000"
+                btn_SkipPlayer["justify"] = "center"
+                btn_SkipPlayer["text"] = "Skip"
+                btn_SkipPlayer.place(x=320,y=200,width=51,height=129)
+                btn_SkipPlayer["command"] = runMatcher
 
-                GButton_472=tk.Button(f3)
-                GButton_472["bg"] = "#e9e9ed"
+                btn_logout=tk.Button(f3)
+                btn_logout["bg"] = "#e9e9ed"
                 ft = tkFont.Font(family='TkDefaultFont',size=10)
-                GButton_472["font"] = ft
-                GButton_472["fg"] = "#000000"
-                GButton_472["justify"] = "center"
-                GButton_472["text"] = "Logout"
-                GButton_472.place(x=360,y=50,width=70,height=25)
-                GButton_472["command"] = runLogin
+                btn_logout["font"] = ft
+                btn_logout["fg"] = "#000000"
+                btn_logout["justify"] = "center"
+                btn_logout["text"] = "Logout"
+                btn_logout.place(x=360,y=50,width=70,height=25)
+                btn_logout["command"] = runLogin
 
-                GMessage_659=tk.Message(f3)
+                lbl_userData=tk.Message(f3)
                 ft = tkFont.Font(family='TkDefaultFont',size=10)
-                GMessage_659["font"] = ft
-                GMessage_659["fg"] = "#333333"
-                GMessage_659["justify"] = "center"
-                GMessage_659["text"] = "UserData"
-                GMessage_659.place(x=330,y=0,width=128,height=66)
+                lbl_userData["font"] = ft
+                lbl_userData["fg"] = "#333333"
+                lbl_userData["justify"] = "center"
+                lbl_userData["text"] = "UserData"
+                lbl_userData.place(x=330,y=0,width=128,height=66)
+
+                lbx_Leaderboard=tk.Listbox(f3)
+                lbx_Leaderboard["borderwidth"] = "1px"
+                lbx_Leaderboard["font"] = ft
+                lbx_Leaderboard["fg"] = "#333333"
+                lbx_Leaderboard["justify"] = "center"
+                lbx_Leaderboard.place(x=60,y=340,width=358,height=102)
 
 
             
