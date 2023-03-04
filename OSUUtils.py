@@ -1,5 +1,6 @@
-from ossapi import Ossapi, GameMode, UserLookupKey, RankingType, UserBeatmapType, Scope
-
+from ossapi import *
+from math import *
+from statistics import mode, mean
 
 class Utils():
     def __init__(self, api):
@@ -7,170 +8,202 @@ class Utils():
         self.beatmap_details = {
         }
     
-    def list_top_players(self, starting_rank, ending_rank, beatmap):
-        scores = self.api.beatmap_scores(beatmap.id).scores
-        for i in range(starting_rank - 1, ending_rank):
-            score = scores[i]
-            print(score.user().username)
-    
-    """
-    Returns the top ten usernames of a beatmap.
-    """
-    def store_top_players(self,starting_rank, ending_rank, beatmap):
-        scores = self.api.beatmap_scores(beatmap.id).scores
-        top_ten_users = []
-        for i in range(starting_rank - 1, ending_rank):
-            score = scores[i]
-            top_ten_users.append(score.user())
 
+    def get_top_players(self, starting_rank, ending_rank, beatmap : Beatmap):
+        scores = self.api.beatmap_scores(beatmap.id).scores
+        top_players = []
+
+        for rank in range(starting_rank - 1, ending_rank):
+            try:
+                score = scores[rank]
+                top_players.append(score.user())
+            except IndexError:
+                print("Empty List. Is this map graveyarded?")
+                break
+
+        return top_players
+
+    def get_top_played_beatmapsets(self, user, limit):
+        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=limit)
         
-        return top_ten_users
-
-
-
-    def get_top_ten_beatmapsets(self, user):
-        # API stupidly returns a list of BeatmapPlaycount classes, rather than beatmap sets for most played beatmaps
-
-        # Maybe cache this so it doesn't have to be called again, or put it into a function?????
-        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=10)
-
-        top_ten_beatmapsets = []
+        top_beatmapsets = []
 
         for beatmap_play_count in beatmap_play_counts:
-            # create a beatmapset object for all beatmaps in users top 10 played.
             # Expand each to scrape optional fields like genre, tags, ratings, etc. https://osu.ppy.sh/docs/index.html#beatmapsetcompact
             # The expand call takes a lot of time
             beatmapset = beatmap_play_count.beatmapset.expand()
+            top_beatmapsets.append(beatmapset)
 
+        return top_beatmapsets
 
-            top_ten_beatmapsets.append(beatmapset)
-            
-
-            # self.store_beatmap_details(str(beatmapset).split(","))
-
-        return top_ten_beatmapsets
-
-    def get_top_ten_beatmaps(self, user):
-
-        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=10)
-        top_ten_beatmaps = []
+    def get_top_played_beatmaps(self, user, limit):
+        beatmap_play_counts = self.api.user_beatmaps(user.id, type=UserBeatmapType.MOST_PLAYED, limit=limit)
+        top_beatmaps = []
 
         for beatmap_play_count in beatmap_play_counts:
-            beatmap = beatmap_play_count.beatmap()
-            top_ten_beatmaps.append(beatmap)
-            # self.store_beatmap_details(beatmap)
+            beatmap = beatmap_play_count.beatmap().expand() #MUST EXTEND for circle count, spinner count, slider count, and BPM
+            top_beatmaps.append(beatmap)
 
-        #self.get_average_difficulty(top_ten_beatmaps)
+        return top_beatmaps
+    
+    def get_beatmapsets(self, beatmaps: list[Beatmap]):
+        beatmapsets = []
 
-        return top_ten_beatmaps
+        for beatmap in beatmaps:
+            beatmapsets.append(beatmap.beatmapset())
 
-    def get_average_difficulty(self, top_ten_beatmaps):
-        difficulty_list = []
-        for i in top_ten_beatmaps:
-            beatmap_string = str(i).split(",")
-            difficulty_list.append(float(beatmap_string[1][len(beatmap_string[1]) - 3: len(beatmap_string[1])]))
+        return beatmapsets
 
-        print(difficulty_list)
-        print(sum(difficulty_list) / len(difficulty_list))
-        return (sum(difficulty_list) / len(difficulty_list))
 
-    def get_common_beatmap_details(self, top_beatmap):
+    def get_average_difficulty(self, beatmaps: list[Beatmap]):
+        difficulty_ratings = []
+
+        for beatmap in beatmaps:
+            difficulty_ratings.append(beatmap.difficulty_rating)
+
+        return mean(difficulty_ratings)
+    
+
+    def get_most_common_language_id(self, beatmapsets: list[Beatmapset]):
+        language_ids = []
+
+        for beatmapset in beatmapsets:
+            language_ids.append(beatmapset.language['id'])
+
+        return mode(language_ids)
+    
+
+    def get_most_common_genre_id(self, beatmapsets: list[Beatmapset]):
+        genre_ids = []
+
+        for beatmapset in beatmapsets:
+            genre_ids.append(beatmapset.genre['id'])
+
+        return mode(genre_ids)
+    
+
+    def get_average_length(self, beatmaps: list[Beatmap]):
+        lengths = []
+
+        for beatmap in beatmaps:
+            lengths.append(beatmap.total_length)
+
+        return mean(lengths)
+    
+
+    def get_average_bpm(self, beatmaps: list[Beatmap]):
+        bpms = []
+
+        for beatmap in beatmaps:
+            bpms.append(beatmap.bpm)
+
+        return mean(bpms)
+    
+
+    def get_average_circle_count(self, beatmaps: list[Beatmap]):
+        circle_counts = []
+
+        for beatmap in beatmaps:
+            circle_counts.append(beatmap.count_circles)
+
+        return mean(circle_counts)
+    
+
+    def get_average_slider_count(self, beatmaps: list[Beatmap]):
+        slider_counts = []
+
+        for beatmap in beatmaps:
+            slider_counts.append(beatmap.count_sliders)
+
+        return mean(slider_counts)
+    
+
+    def get_average_spinner_count(self, beatmaps: list[Beatmap]):
+        spinner_counts = []
+
+        for beatmap in beatmaps:
+            spinner_counts.append(beatmap.count_spinners)
+
+        return mean(spinner_counts)
+
+    
+    # limit -> How many beatmaps should be analysed from the user's top played beatmaps
+    def get_playstyle(self, user, scraping_limit):
+        top_beatmaps = self.get_top_played_beatmaps(user, scraping_limit)
+        top_beatmapsets = self.get_top_played_beatmapsets(user, scraping_limit)
         
-        for beatmap in top_beatmap:
-            top_players = self.store_top_players(1, 10, beatmap)
+        average_difficulty = self.get_average_difficulty(top_beatmaps)
+        most_common_language_id = self.get_most_common_language_id(top_beatmapsets)
+        most_common_genre_id = self.get_most_common_genre_id(top_beatmapsets)
+        average_length = self.get_average_length(top_beatmaps)
+
+        # Require expansion of Beatmaps
+
+        average_bpm = self.get_average_bpm(top_beatmaps)
+        average_circle_count = self.get_average_circle_count(top_beatmaps)
+        average_slider_count = self.get_average_slider_count(top_beatmaps)
+        average_spinner_count = self.get_average_spinner_count(top_beatmaps)
+
+        playstyle = {
+            'Average Difficulty': average_difficulty,
+            'Most Common Language Id': most_common_language_id,
+            'Most Common Genre Id': most_common_genre_id,
+            'Average Length': average_length,
+            'Average BPM': average_bpm,
+            'Average Circle Count': average_circle_count,
+            'Average Slider Count': average_slider_count,
+            'Average Spinner Count': average_spinner_count
+        }
+
+        return playstyle
+    
+    # limit -> How many beatmaps should be analysed from the player's top played beatmaps
+    def get_playstyles(self, players : list[User], scraping_limit):
+        playstyles = {}
         
-            for players in top_players:
-                genre = 0
-                language = 0
-                difficulty = 0
-                length = 0
-                bpm = 0
-                circle_count = 0 
-                slider_count = 0
-                spinner_count = 0
+        for player in players:
+            playstyles[player.username] = self.get_playstyle(player, scraping_limit)
 
-                top_ten_beatmaps = self.get_top_ten_beatmaps(players)
-                top_ten_beatmapsets = self.get_top_ten_beatmapsets(players)
+        return playstyles
 
-                for beatmaps in range(len(top_ten_beatmapsets)):
-                    
-                    # expandedVariant = top_ten_beatmaps[beatmaps].expand()
-                    
-                    genre += (int(str(top_ten_beatmapsets[beatmaps].genre)[7]))
-                    language += (int(str(top_ten_beatmapsets[beatmaps].language)[7]))
-                    difficulty += (top_ten_beatmaps[beatmaps].difficulty_rating)
-                    length += (top_ten_beatmaps[beatmaps].total_length)
+    # Provides playstyles as USERNAME : {VALUE_TYPE : VALUE, VALUE_TYPE: VALUE, VALUE_TYPE: VALUE}
+    def get_common_player_playstyles(self, user, top_played_beatmaps_count, starting_rank, ending_rank, playstyle_scraping_limit):
+        top_played_beatmaps = self.get_top_played_beatmaps(user, limit=top_played_beatmaps_count)
+        playstyles = {}
+        for beatmap in top_played_beatmaps:
+            top_players = self.get_top_players(starting_rank, ending_rank, beatmap)
+            playstyles.update(self.get_playstyles(top_players, playstyle_scraping_limit))
 
-                    # bpm += (expandedVariant.bpm)
-                    # circle_count += (expandedVariant.count_circles)
-                    # slider_count += (expandedVariant.count_sliders)
-                    # spinner_count += (expandedVariant.count_spinners)
-                    
-                
-                """
-                The following commented out block of code gives the output in format of : 
-                USERNAME : [value, value, value, value]
-
-                The one after it provides it in: 
-                USERNAME : {VALUE_TYPE : VALUE, VALUE_TYPE: VALUE, VALUE_TYPE: VALUE}
-
-                CTRL + / TO UNCOMMENT C:
-                """
-                # self.beatmap_details[str(players.username)] = []
-                # self.beatmap_details[str(players.username)].append(genre / len(top_ten_beatmapsets))
-                # self.beatmap_details[str(players.username)].append(language / len(top_ten_beatmapsets))
-                # self.beatmap_details[str(players.username)].append(difficulty / len(top_ten_beatmapsets))
-                # self.beatmap_details[str(players.username)].append(length / len(top_ten_beatmapsets))
-
-                # self.beatmap_details[str(players.username)].append(bpm / len(top_ten_beatmapsets))
-                # self.beatmap_details[str(players.username)].append(circle_count / len(top_ten_beatmapsets))
-                # self.beatmap_details[str(players.username)].append(slider_count / len(top_ten_beatmapsets))
-                # self.beatmap_details[str(players.username)].append(spinner_count / len(top_ten_beatmapsets))
-
-                self.beatmap_details[str(players.username)] = {}
-                self.beatmap_details[str(players.username)]["Genre: "] = (genre / len(top_ten_beatmapsets))
-                self.beatmap_details[str(players.username)]["Language: "] = (language / len(top_ten_beatmapsets))
-                self.beatmap_details[str(players.username)]["Difficulty: "] = (difficulty / len(top_ten_beatmapsets))
-                self.beatmap_details[str(players.username)]["Length: "] = (length / len(top_ten_beatmapsets))
-
-                self.beatmap_details[str(players.username)]["BPM: "] = (bpm / len(top_ten_beatmapsets))
-                self.beatmap_details[str(players.username)]["Circle Count: "] = (circle_count / len(top_ten_beatmapsets))
-                self.beatmap_details[str(players.username)]["Slider Count: "] = (slider_count / len(top_ten_beatmapsets))
-                self.beatmap_details[str(players.username)]["Spinner Count: "] = (spinner_count / len(top_ten_beatmapsets))
-
-                
-                
-
-        print(self.beatmap_details)
-        
-        
-        
+        return playstyles
 
 
+    def get_playstyle_similarity(self, playstyle1, playstyle2):
 
-    def store_beatmap_details(self, beatMap):
-        # self.beatmap_details["difficulty"].append(beatMap[28])
-        # self.beatmap_details["length"].append(beatMap[32])
-        # print(beatMap.index(" language={'id': 3", " 'name': 'Japanese'}"))
-        counter = 0
-        languageBool = False
-        diffBool = False
-        lengthBool = False
-        genreBool = False
+        # Calculates cosine similarity between vector representations of each playstyle
 
-        print(beatMap.beatmap_attributes)
-            # if i.__contains__("language=") and not languageBool:
-            #     self.beatmap_details["language"].append(beatMap[counter][-1])
-            #     languageBool = True
-            # if i.__contains__("difficulty") and not diffBool:
-            #     self.beatmap_details["difficulty"].append(beatMap[counter][-1])
-            #     diffBool = True
-            # if i.__contains__("total_length") and not lengthBool:
-            #     self.beatmap_details["length"].append(beatMap[counter][14:-1])
-            #     lengthBool = True
-            # if i.__contains__("genre") and not genreBool:
-            #     self.beatmap_details["genre"].append(beatMap[counter][-1])
-            #     genreBool = True
-            # counter += 1
+        # No need to worry about key matching because both lists are structured the same
+        # No need to normalise since we aren't relying on distant metrics
+        vector1 = list(playstyle1.values())
+        vector2 = list(playstyle2.values())
 
-        # print(beatMap)
+        # Euclidean magnitude is always the square root of the sum of each vector element
+        # think about finding the diagonal in a rectangular prism only with its side lengths
+        magnitude1 = sqrt(sum(a * a for a in vector1))
+        magnitude2 = sqrt(sum(a * a for a in vector2))
+
+        # Finds the dot product between the two vectors
+        # Remember dot produt = cosine similarity  * magnitude
+        numerator = sum(a * b for a,b in zip(vector1,vector2))
+        denominator = magnitude1 * magnitude2
+
+        return round(numerator / denominator, 4)
+    
+
+    def get_playstyle_similarties(self, base_playstyle, comparison_playstyles):
+        similarities = {}
+
+        for username in comparison_playstyles:
+            playstyle_similarity = self.get_playstyle_similarity(base_playstyle, comparison_playstyles[username])
+            similarities.update({username : playstyle_similarity})
+
+        return similarities

@@ -1,6 +1,9 @@
-from ossapi import Ossapi, GameMode, UserLookupKey, RankingType, UserBeatmapType, Scope
-# import configparser
+from ossapi import *
+import configparser
 import OSUUtils
+from timeit import default_timer as timer
+
+start = timer()
 
 """"IMPORTANT NOTES:
 Beatmap Set = All the associated beatmaps by an artist, for all difficulties, for a specific song.
@@ -10,52 +13,32 @@ Graveyarded beatmaps or beatmapsets don't contain any scores, but the api still 
 Beatmaps in set are ordered from hardest difficulty to easiest difficulty
 """
 
-# config = configparser.RawConfigParser()
-# config.read('config.cfg')
-# keys_dict = dict(config.items('CONFIG'))
-
 # Client ID is needed for operation, client-secret allows for user control
 # Create a new client at https://osu.ppy.sh/home/account/edit#oauth
-# client_id = keys_dict['client_id']
-# client_secret = keys_dict['client_secret']
 
-client_id = 20800
-client_secret = "1CwngLGnXiBszeUcTuWyRpWzmWp3Itd7fErVEAhj"
-userId = 9545422
+config = configparser.RawConfigParser()
+config.read('config.cfg')
+keys_dict = dict(config.items('CONFIG'))
+
+client_id = keys_dict['client_id']
+client_secret = keys_dict['client_secret']
+
 
 api = Ossapi(client_id, client_secret)
 api.scopes = [Scope.PUBLIC, Scope.IDENTIFY]
-user = api.user(user = userId, mode=GameMode.OSU)
+user = api.user(user = keys_dict['user'], mode=GameMode.OSU)
 utils = OSUUtils.Utils(api)
 
+user_playstyle = utils.get_playstyle(user, scraping_limit=3)
 
-top_ten_beatmapsets = utils.get_top_ten_beatmapsets(user)
+# Looks at a user's top 10 played beatmaps, finds rank 1-4 players in each of them, gathers play style data based on their top 3 most played beatmaps
+common_player_playstyles = utils.get_common_player_playstyles(user,
+                                                        top_played_beatmaps_count=10, starting_rank=1,
+                                                        ending_rank=3, playstyle_scraping_limit=3)
 
-
-
-
-
-
-
-
-top_ten_beatmapsets = utils.get_top_ten_beatmapsets(user)
+print(utils.get_playstyle_similarties(base_playstyle=user_playstyle, comparison_playstyles=common_player_playstyles))
 
 
-first_beatmap = top_ten_beatmapsets[0].beatmaps[0]
+end = timer()
 
-# Each call of this function takes ~ 6-7 Seconds
-utils.list_top_players(1, 10, first_beatmap)
-
-
-top_ten_beatmap = utils.get_top_ten_beatmaps(user)
-
-utils.get_common_beatmap_details(top_ten_beatmap)
-
-
-
-
-"""for beatmapset in top_ten_beatmapsets:
-    print(beatmapset.genre["name"])
-    easiest_beatmap = beatmapset.beatmaps[0]
-    scores = api.beatmap_scores(easiest_beatmap.id).scores
-    print(len(scores))"""
+print(f"Program took {end - start} secs to run")
