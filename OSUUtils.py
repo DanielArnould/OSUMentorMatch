@@ -28,7 +28,8 @@ class Utils():
             # The expand call takes a lot of time
             beatmapset = beatmap_play_count.beatmapset.expand()
             top_ten_beatmapsets.append(beatmapset)
-            self.store_beatmap_details(str(beatmapset).split(","))
+            #self.store_beatmap_details(str(beatmapset).split(","))
+            print(str(beatmapset))
 
 
         return top_ten_beatmapsets
@@ -57,7 +58,7 @@ class Utils():
                 genreBool = True
             counter += 1
 
-        print(self.beatmap_details)
+        print(beatMap)
         # beatMap.index("language =")
         # print(self.beatmap_details["length"])
         # print(self.beatmap_details["difficulty"])
