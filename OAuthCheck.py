@@ -3,13 +3,12 @@ import requests
 import webbrowser
 # import json #only if the user's details need to be written to a file.
 
-
-# !!! Not familiar with tkinter; unsure of integration into tag.py
+# ! The print statements print to terminal, not tkinter program
 
 def check_OAuth():
-    check = False   # currently, the user has not checked if they have an OAuth
+    check = False   # The user has not checked if they have an OAuth
 
-    while check == False:
+    while check == False:  # will loop until the user has entered their OAuth details
         oauth_exist = input("Do you have an osu! OAuth token? (y/n): ")
         if oauth_exist.lower() == 'n':
             # if the user replies 'n' (no), they will be taken to the website below to create OAuth.
