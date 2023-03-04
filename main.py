@@ -31,7 +31,9 @@ first_beatmap = top_ten_beatmapsets[0].beatmaps[0]
 
 # Each call of this function takes ~ 6-7 Seconds
 utils.list_top_players(1, 10, first_beatmap)
-utils.store_beatmap_details(first_beatmap)
+
+for beatmap in utils.get_top_ten_beatmaps(user):
+    print(beatmap.difficulty_rating)
 
 
 
