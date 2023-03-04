@@ -1,4 +1,3 @@
-import asyncio
 from ossapi import *
 import configparser
 import OSUUtils
@@ -20,6 +19,7 @@ keys_dict = dict(config.items('CONFIG'))
 # Create a new client at https://osu.ppy.sh/home/account/edit#oauth
 client_id = keys_dict['client_id']
 client_secret = keys_dict['client_secret']
+
 api = Ossapi(client_id, client_secret)
 user = api.user(user = keys_dict['user'], mode=GameMode.OSU)
 
