@@ -11,6 +11,8 @@ Graveyarded beatmaps or beatmapsets don't contain any scores, but the api still 
 Beatmaps in set are ordered from hardest difficulty to easiest difficulty
 """
 
+"TEST!!!!!"
+
 config = configparser.RawConfigParser()
 config.read('config.cfg')
 keys_dict = dict(config.items('CONFIG'))
