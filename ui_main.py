@@ -1,8 +1,9 @@
 import sys
 import os
-import tkinter as tk
+import tkinter as otk
 import tkinter.font as tkFont
 from tkinter import *  
+import customtkinter as tk
 import OAuthCheck   
 
 
@@ -23,6 +24,7 @@ class App:
 
 
             #setting title
+            
             root.title("Osu Mentory")
             #setting window size
             width=500
@@ -61,22 +63,21 @@ class App:
             def Login():
                     
                     ft = tkFont.Font(family='TkDefaultFont',size=10)
-                    lbl_Login=tk.Label(f1)
+                    lbl_Login=tk.CTkLabel(f1)
                     lbl_Login["anchor"] = "center"
                     lbl_Login["font"] = ft
                     lbl_Login["fg"] = "#333333"
                     lbl_Login["justify"] = "center"
                     lbl_Login["text"] = "Login"
-                    lbl_Login.place(x=220,y=30,width=70,height=25)
+                    lbl_Login.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
-                    btn_Login=tk.Button(f1)
+                    btn_Login=tk.CTkButton(f1)
                     btn_Login["bg"] = "#e9e9ed"
-                    
                     btn_Login["font"] = ft
                     btn_Login["fg"] = "#000000"
                     btn_Login["justify"] = "center"
                     btn_Login["text"] = "Login With Osu"
-                    btn_Login.place(x=80,y=90,width=250,height=50)
+                    btn_Login.place(relx=0.5, rely=0.8, anchor=tk.CENTER)
                     btn_Login["command"] = runProfile
                         
                 
@@ -192,7 +193,7 @@ class App:
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = tk.CTk()
     app = App(root)
     root.mainloop()
     
