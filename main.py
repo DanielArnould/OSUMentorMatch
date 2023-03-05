@@ -43,6 +43,35 @@ sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
 # sidebar_frame.grid_propagate(False)
 sidebar_frame.grid_rowconfigure(4, weight=1) # stretches sidebar to the bottom of the window
 
+lblScrapeLimit = customtkinter.CTkLabel(root,text = "Scraping Limit:")
+lblScrapeLimit.place(x=50,y=100)
+txtScrapingLimit = customtkinter.CTkEntry(root)
+txtScrapingLimit.place(x=50,y=125)
+
+lblStartRank = customtkinter.CTkLabel(root,text = "Starting Rank:")
+lblStartRank.place(x=50,y=175)
+txtStartRank = customtkinter.CTkEntry(root)
+txtStartRank.place(x=50,y=200)
+
+lblEndRank = customtkinter.CTkLabel(root,text = "Ending Rank:")
+lblEndRank.place(x=50,y=250)
+txtEndRank = customtkinter.CTkEntry(root)
+txtEndRank.place(x=50,y=275)
+def btnEnter():
+    scraping_limit = int(txtScrapingLimit.get())
+    starting_rank = int(txtStartRank.get())
+    ending_rank = int(txtEndRank.get())
+    if scraping_limit < 1 :
+        messagebox.showerror("Error", "Invalid Scraping Limit!")
+    elif starting_rank < 1:
+        messagebox.showerror("Error", "Invalid Starting Rank!")
+    elif scraping_limit < 1 and starting_rank < 1 : 
+        messagebox.showerror("Error", "Invalid Scraping Limit and Starting Rank!")
+
+    
+btnEnter = customtkinter.CTkButton(root, text = "Enter", command=btnEnter)
+btnEnter.place(x=50,y=350)
+
 def label_button_frame_event(item):
     print(f"label button frame clicked: {item}")
 
