@@ -10,6 +10,8 @@ import os
 from PIL import Image
 import urllib.request
 import OAuthCheck
+import webbrowser
+
 
 start = timer()
 
@@ -45,11 +47,16 @@ def authy():
     OAuthCheck.client_secret = App.Login.client_key_entry.get()
     OAuthCheck.user_id = App.Login.username_entry.get()
     OAuthCheck.get_OAuth()
-    config = OAuthCheck.user_info
+    
 
 
 class App:
     frames = {"f1": None, "f2": None}
+
+    client_id
+    client_secret: str
+    username
+
     def __init__(self, root):
         
         App.frames['f1'] = customtkinter.CTkFrame(root)
@@ -76,7 +83,8 @@ class App:
                 # GUI.SidebarFrame.pack(fill="both", expand=True, padx=0, pady=0)
                 # GUI.LoginFrame.pack_forget()
                 # Matcher()
-                authy()
+                global client_id_entry
+                GUI.login()
                 App.frames['f2'].pack()
                 App.frames['f2'].pack(fill="both", expand=True, padx=0, pady=0)
                 App.frames['f1'].pack_forget()
@@ -145,22 +153,43 @@ class App:
             entry_end_rank.grid(row=3, column=0, pady=(0, 20))
 
             entry_playstyle_scraping_limit = customtkinter.CTkEntry(App.frames['f2'], width=250, placeholder_text="Playstyle Scraping Limit")
-            entry_playstyle_scraping_limit.grid(row=4, column=0, pady=(0, 20))
+            entry_top_played_beatmaps_scraping_limit.place(x=25,y=125)
+
+            entry_end_rank = customtkinter.CTkEntry(App.frames['f2'], width=250, placeholder_text="Ending Rank")
+            entry_end_rank.place(x=25,y=225)
+
+            entry_playstyle_scraping_limit = customtkinter.CTkEntry(App.frames['f2'], width=250, placeholder_text="Playstyle Scraping Limit")
+            entry_playstyle_scraping_limit.place(x=25,y=275)
 
             def set_inputs():
-                top_played_beatmaps_scraping_limit = int(entry_top_played_beatmaps_scraping_limit.get())
-                starting_rank = int(entry_start_rank.get())
-                ending_rank = int(entry_end_rank.get())
-                if top_played_beatmaps_scraping_limit < 1 :
-                    messagebox.showerror("Error", "Invalid Scraping Limit!")
-                elif starting_rank < 1:
-                    messagebox.showerror("Error", "Invalid Starting Rank!")
-                elif top_played_beatmaps_scraping_limit < 1 and starting_rank < 1 : 
-                    messagebox.showerror("Error", "Invalid Scraping Limit and Starting Rank!")
+                try:
+                    top_played_beatmaps_scraping_limit = int(entry_top_played_beatmaps_scraping_limit.get())
+                    starting_rank = int(entry_start_rank.get())
+                    ending_rank = int(entry_end_rank.get())
+                    playstyle_scraping_limit = int(entry_playstyle_scraping_limit.get())
 
-            
-            enter_button = customtkinter.CTkButton(App.frames['f2'], text = "Enter", command=set_inputs)
-            enter_button.grid(row=5, column=0)
+                    user_playstyle = utils.get_playstyle(user, scraping_limit=top_played_beatmaps_scraping_limit)
+                    common_player_playstyles = utils.get_common_player_playstyles(user, top_played_beatmaps_count=top_played_beatmaps_scraping_limit, starting_rank=starting_rank, ending_rank=ending_rank, playstyle_scraping_limit=playstyle_scraping_limit)
+
+                    playstyle_similarties = utils.get_playstyle_similarties(base_playstyle=user_playstyle, comparison_playstyles=common_player_playstyles)
+                    
+                    def label_button_frame_event(item):
+                        user_id = utils.api.user(item).id
+                        print(f"label button frame clicked: {item}")
+                        webbrowser.open_new_tab(f"https://osu.ppy.sh/users/{user_id}/osu") # IMPORTANT 
+
+                    scrollable_mentor_frame = ScrollableMentorFrame(master=self, width=1250, height=1000, command=label_button_frame_event, corner_radius=0)
+                    scrollable_mentor_frame.grid(row=0, rowspan=10, column=1, padx=300, pady=0, sticky="nsew")
+
+                    for mentor in playstyle_similarties:  
+                        scrollable_mentor_frame.add_mentor(f"{mentor}", f"Similarity Score: {playstyle_similarties[mentor]}")
+
+                except ValueError:
+                    messagebox.showerror("Error", "Invalid entry values")
+
+
+            enter_button = customtkinter.CTkButton(self, text = "Enter", command=set_inputs)
+            enter_button.place(x=25,y=325)
 
             def label_button_frame_event(item):
                 print(f"label button frame clicked: {item}")
@@ -176,8 +205,8 @@ class App:
                     self.button_list = []
                     self.similarity_scores =[]
 
-                def add_mentor(self, username, similarity_score, pfp=None):
-                    username_label = customtkinter.CTkLabel(self, text=username, image=pfp, compound="left", padx=5, anchor="w")
+                def add_mentor(self, username, similarity_score):
+                    username_label = customtkinter.CTkLabel(self, text=username, compound="left", padx=5, anchor="w")
                     button = customtkinter.CTkButton(self, text="See Profile", width=100, height=24)
                     similarity_label = customtkinter.CTkLabel(self, text=similarity_score, padx=20, anchor="e")
                     if self.command is not None:
@@ -188,13 +217,6 @@ class App:
                     self.username_list.append(username_label)
                     self.similarity_scores.append(similarity_label)
                     self.button_list.append(button)
-
-            scrollable_mentor_frame = ScrollableMentorFrame(master=App.frames['f2'], width=1250, command=label_button_frame_event, corner_radius=0)
-            scrollable_mentor_frame.grid(row=0, rowspan=5, column=1, padx=40, pady=0, sticky="nsew")
-
-            for i in range(20):  # add items with images
-                scrollable_mentor_frame.add_mentor(f"Username {i}", f"Similarity Score: {i}", pfp=None)
-
             
 
 

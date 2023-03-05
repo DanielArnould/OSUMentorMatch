@@ -6,8 +6,12 @@ class LoginFrame(customtkinter.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        
-
+        def login():
+            OAuthCheck.client_id = self.client_id_entry.get() 
+            OAuthCheck.client_secret = self.client_key_entry.get()
+            OAuthCheck.user_id = self.username_entry.get()
+            OAuthCheck.get_OAuth()
+            config = OAuthCheck.user_info
         # checkbox = customtkinter.CTkCheckBox(self, text="Remember Me")
         # checkbox.pack(pady=12, padx=10)
 
