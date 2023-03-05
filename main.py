@@ -1,6 +1,7 @@
 from ossapi import *
 import configparser
 import OSUUtils
+import GUI.py
 from timeit import default_timer as timer
 
 start = timer()
