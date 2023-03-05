@@ -5,7 +5,6 @@ from timeit import default_timer as timer
 import customtkinter 
 import tkinter as tk
 from tkinter import messagebox
-
 import os
 # from PIL import Image
 from PIL import Image
@@ -153,15 +152,41 @@ class App:
             def label_button_frame_event(item):
                 print(f"label button frame clicked: {item}")
 
-            scrollable_mentor_frame = GUI.ScrollableMentorFrame(master=root, width=1250, command=label_button_frame_event, corner_radius=0)
+
+            class ScrollableMentorFrame(customtkinter.CTkScrollableFrame):
+                def __init__(self, master, command=None, **kwargs):
+                    super().__init__(master, **kwargs)
+
+                    self.command = command
+                    self.radiobutton_variable = customtkinter.StringVar()
+                    self.username_list = []
+                    self.button_list = []
+                    self.similarity_scores =[]
+
+                def add_mentor(self, username, similarity_score, pfp=None):
+                    username_label = customtkinter.CTkLabel(self, text=username, image=pfp, compound="left", padx=5, anchor="w")
+                    button = customtkinter.CTkButton(self, text="See Profile", width=100, height=24)
+                    similarity_label = customtkinter.CTkLabel(self, text=similarity_score, padx=20, anchor="e")
+                    if self.command is not None:
+                        button.configure(command=lambda: self.command(username))
+                    username_label.grid(row=len(self.username_list), column=0, pady=(0, 20), sticky="w")
+                    similarity_label.grid(row=len(self.similarity_scores), column=1, pady=(0, 20), sticky="e")
+                    button.grid(row=len(self.button_list), column=2, pady=(0, 20), padx=10)
+                    self.username_list.append(username_label)
+                    self.similarity_scores.append(similarity_label)
+                    self.button_list.append(button)
+
+            scrollable_mentor_frame = ScrollableMentorFrame(master=App.frames['f2'], width=1250, command=label_button_frame_event, corner_radius=0)
             scrollable_mentor_frame.grid(row=0, rowspan=5, column=1, padx=40, pady=0, sticky="nsew")
 
             for i in range(20):  # add items with images
                 scrollable_mentor_frame.add_mentor(f"Username {i}", f"Similarity Score: {i}", pfp=None)
 
+            
 
 
-        Login()
+
+        Matcher()
        
 
 
