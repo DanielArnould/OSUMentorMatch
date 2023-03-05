@@ -2,6 +2,7 @@ from ossapi import *
 from math import *
 from statistics import mode, mean
 
+
 class Utils():
     def __init__(self, api):
         self.api = api
