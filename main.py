@@ -40,6 +40,13 @@ except ValueError:
 
 utils = OSUUtils.Utils(api)
 
+def authy():
+    OAuthCheck.client_id = App.Login.client_id_entry.get() 
+    OAuthCheck.client_secret = App.Login.client_key_entry.get()
+    OAuthCheck.user_id = App.Login.username_entry.get()
+    OAuthCheck.get_OAuth()
+    config = OAuthCheck.user_info
+
 
 class App:
     frames = {"f1": None, "f2": None}
@@ -69,6 +76,7 @@ class App:
                 # GUI.SidebarFrame.pack(fill="both", expand=True, padx=0, pady=0)
                 # GUI.LoginFrame.pack_forget()
                 # Matcher()
+                authy()
                 App.frames['f2'].pack()
                 App.frames['f2'].pack(fill="both", expand=True, padx=0, pady=0)
                 App.frames['f1'].pack_forget()
@@ -86,14 +94,18 @@ class App:
             
             App.frames['f1'].pack()
             login_frame.pack(pady=20, padx=60, fill="both", expand=True)
+            
             login_label = customtkinter.CTkLabel(App.frames['f1'], text="Login System", font=("Roboto", 24))
             login_label.pack(pady=12, padx=10)
 
+            
             client_id_entry = customtkinter.CTkEntry(App.frames['f1'], placeholder_text="Client ID", show="*")
             client_id_entry.pack(pady=12, padx=10)
 
             client_key_entry = customtkinter.CTkEntry(App.frames['f1'], placeholder_text="Client Secret", show="*")
             client_key_entry.pack(pady=12, padx=10)
+
+            
 
             username_entry = customtkinter.CTkEntry(App.frames['f1'], placeholder_text="username")
             username_entry.pack(pady=12, padx=10)
@@ -104,7 +116,8 @@ class App:
             login_button.pack(pady=12, padx=14)
 
             logo_image = customtkinter.CTkImage(Image.open("osuIconRevised.png"), size=(26, 26))
-
+            
+        
         
 
         
@@ -186,7 +199,7 @@ class App:
 
 
 
-        Matcher()
+        Login()
        
 
 
