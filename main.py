@@ -44,19 +44,19 @@ sidebar_frame.grid(row=0, column=0, rowspan=4, sticky="nsew")
 sidebar_frame.grid_rowconfigure(4, weight=1) # stretches sidebar to the bottom of the window
 
 lblScrapeLimit = customtkinter.CTkLabel(root,text = "Scraping Limit:")
-lblScrapeLimit.place(x=50,y=100)
+lblScrapeLimit.place(x=25,y=100)
 txtScrapingLimit = customtkinter.CTkEntry(root)
-txtScrapingLimit.place(x=50,y=125)
+txtScrapingLimit.place(x=25,y=125)
 
 lblStartRank = customtkinter.CTkLabel(root,text = "Starting Rank:")
-lblStartRank.place(x=50,y=175)
+lblStartRank.place(x=25,y=175)
 txtStartRank = customtkinter.CTkEntry(root)
-txtStartRank.place(x=50,y=200)
+txtStartRank.place(x=25,y=200)
 
 lblEndRank = customtkinter.CTkLabel(root,text = "Ending Rank:")
-lblEndRank.place(x=50,y=250)
+lblEndRank.place(x=25,y=250)
 txtEndRank = customtkinter.CTkEntry(root)
-txtEndRank.place(x=50,y=275)
+txtEndRank.place(x=25,y=275)
 def btnEnter():
     scraping_limit = int(txtScrapingLimit.get())
     starting_rank = int(txtStartRank.get())
