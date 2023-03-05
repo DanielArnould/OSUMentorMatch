@@ -41,6 +41,11 @@ class ScrollableMentorFrame(customtkinter.CTkScrollableFrame):
             switch = customtkinter.CTkSwitch(master=self, text=f"CTkSwitch {i}")
             switch.grid(row=i, column=0, padx=10, pady=(0, 20))
             self.scrollable_frame_switches.append(switch)
-            
+
+
+
+
+
 def login():
     print("Test")
+
