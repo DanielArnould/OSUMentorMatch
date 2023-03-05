@@ -37,26 +37,53 @@ class LoginFrame(customtkinter.CTkFrame):
         # checkbox.pack(pady=12, padx=10)
 
 class SidebarFrame(customtkinter.CTkFrame):
-    def __init__(self, master, utils : OSUUtils.Utils, user : User):
+    def __init__(self, master):
         super().__init__(master, width=300, height=10000, corner_radius=0)
 
         self.sidebar_label = customtkinter.CTkLabel(self, text="OSU Mentor Matcher!", font=("Roboto", 24))
         self.sidebar_label.place(x=25,y=50)
 
+        client_id_entry = customtkinter.CTkEntry(self, width=250, placeholder_text="Client ID")
+        client_id_entry.place(x=25,y=125)
+
+        client_secret_entry = customtkinter.CTkEntry(self, width=250, placeholder_text="Client Secret")
+        client_secret_entry.place(x=25,y=175)
+
+        username_entry = customtkinter.CTkEntry(self, width=250, placeholder_text="Username")
+        username_entry.place(x=25,y=225)
+
         entry_top_played_beatmaps_scraping_limit = customtkinter.CTkEntry(self, width=250, placeholder_text="Top Played Beatmaps Scraping Limit")
-        entry_top_played_beatmaps_scraping_limit.place(x=25,y=125)
+        entry_top_played_beatmaps_scraping_limit.place(x=25,y=275)
 
         entry_start_rank = customtkinter.CTkEntry(self, width=250, placeholder_text= "Starting Rank")
-        entry_start_rank.place(x=25,y=175)
+        entry_start_rank.place(x=25,y=325)
 
         entry_end_rank = customtkinter.CTkEntry(self, width=250, placeholder_text="Ending Rank")
-        entry_end_rank.place(x=25,y=225)
+        entry_end_rank.place(x=25,y=375)
 
         entry_playstyle_scraping_limit = customtkinter.CTkEntry(self, width=250, placeholder_text="Playstyle Scraping Limit")
-        entry_playstyle_scraping_limit.place(x=25,y=275)
+        entry_playstyle_scraping_limit.place(x=25,y=425)
+
+
 
         def set_inputs():
             try:
+                client_id = str(client_id_entry.get())
+                client_secret = str(client_secret_entry.get())
+                username = str(username_entry.get())
+
+                api = Ossapi(client_id, client_secret)
+                api.scopes = [Scope.PUBLIC, Scope.IDENTIFY]
+
+                try:
+                    user = api.user(user=username, mode=GameMode.OSU, key=UserLookupKey.USERNAME)
+                except ValueError:
+                    print("USER DOES NOT EXIST, TERMINATING")
+                    quit()
+
+                utils = OSUUtils.Utils(api)
+
+
                 top_played_beatmaps_scraping_limit = int(entry_top_played_beatmaps_scraping_limit.get())
                 starting_rank = int(entry_start_rank.get())
                 ending_rank = int(entry_end_rank.get())
@@ -83,7 +110,7 @@ class SidebarFrame(customtkinter.CTkFrame):
 
 
         enter_button = customtkinter.CTkButton(self, text = "Enter", command=set_inputs)
-        enter_button.place(x=25,y=325)
+        enter_button.place(x=25,y=475)
     
 
 
