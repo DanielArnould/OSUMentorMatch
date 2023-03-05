@@ -3,6 +3,7 @@ from tkinter import messagebox
 from PIL import Image
 import OSUUtils
 from ossapi import *
+import OAuthCheck
 
 class LoginFrame(customtkinter.CTkFrame):
     def __init__(self, master):
@@ -19,6 +20,12 @@ class LoginFrame(customtkinter.CTkFrame):
 
         self.username_entry = customtkinter.CTkEntry(self, placeholder_text="username")
         self.username_entry.pack(pady=12, padx=10)
+        
+        def login():
+            OAuthCheck.client_id = self.client_id_entry.get() 
+            OAuthCheck.client_secret = self.client_key_entry.get()
+            OAuthCheck.user_id = self.username_entry.get()
+            OAuthCheck.get_OAuth()
 
         login_button = customtkinter.CTkButton(self, text="Login", command=login)
         login_button.pack(pady=12, padx=12)
@@ -108,6 +115,5 @@ class ScrollableMentorFrame(customtkinter.CTkScrollableFrame):
 
 
 
-def login():
-    print("Test")
+
 
