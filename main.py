@@ -1,6 +1,6 @@
 from ossapi import *
 import configparser
-import OSUUtils
+import OSUUtils, GUI
 from timeit import default_timer as timer
 import customtkinter
 
