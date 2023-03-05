@@ -6,13 +6,26 @@ import customtkinter
 import tkinter as tk
 
 import os
-# from PIL import Image
 from PIL import Image
 import urllib.request
 
 
 
 start = timer()
+
+client_id : int
+client_secret: str
+username : str
+user: User
+
+config = configparser.RawConfigParser()
+config.read('config.cfg')
+keys_dict = dict(config.items('CONFIG'))
+
+client_id = keys_dict['client_id']
+client_secret = keys_dict['client_secret']
+username = keys_dict['user']
+
 
 customtkinter.set_appearance_mode("system")
 customtkinter.set_default_color_theme("dark-blue")
@@ -33,6 +46,29 @@ root.grid_rowconfigure((0, 1, 2, 3), weight=1)
 # login_frame.pack(pady=20, padx=60, fill="both", expand=True)
 
 
+
+
+api = Ossapi(client_id, client_secret)
+api.scopes = [Scope.PUBLIC, Scope.IDENTIFY]
+
+try:
+    user = api.user(user=username, mode=GameMode.OSU, key=UserLookupKey.USERNAME)
+except ValueError:
+    print("USER DOES NOT EXIST, TERMINATING")
+    quit()
+
+utils = OSUUtils.Utils(api)
+
+
+
+# user_playstyle = utils.get_playstyle(user, scraping_limit=3)
+
+# # Looks at a user's top 10 played beatmaps, finds rank 1-4 players in each of them, gathers play style data based on their top 3 most played beatmaps
+# common_player_playstyles = utils.get_common_player_playstyles(user,
+#                                                         top_played_beatmaps_count=10, starting_rank=1,
+#                                                         ending_rank=3, playstyle_scraping_limit=3)
+
+# print(utils.get_playstyle_similarties(base_playstyle=user_playstyle, comparison_playstyles=common_player_playstyles))
 
 # # load images with light and dark mode image
 # image_file = "osuIconRevised.png"
